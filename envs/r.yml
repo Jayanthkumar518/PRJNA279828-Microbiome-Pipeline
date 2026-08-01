@@ -1,0 +1,33 @@
+name: metagenomics-r
+
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+
+  - r-base=4.4
+
+  - r-tidyverse
+
+  - r-vegan
+
+  - r-ggpubr
+
+  - r-readr
+
+  - r-dplyr
+
+  - r-ggplot2
+
+  - r-patchwork
+
+  - r-data.table
+
+  - r-lme4
+
+  - r-lmertest
+
+  - r-rstatix
+
+  - r-pheatmap

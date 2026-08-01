@@ -1,0 +1,32 @@
+name: qiime2-amplicon-2025.10
+
+channels:
+  - qiime2
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+
+  # QIIME2
+  - qiime2-amplicon=2025.10
+
+  # Python
+  - python=3.10
+
+  # Workflow utilities
+  - pandas
+  - numpy
+  - scipy
+
+  # Sequence processing
+  - seqkit
+  - csvtk
+
+  # FASTQ quality checking
+  - fastqc
+  - multiqc
+
+  # General bioinformatics
+  - biom-format
+  - samtools

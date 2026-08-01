@@ -1,0 +1,6 @@
+{
+    "input": "data/raw_fastq",
+    "metadata": "assets/metadata.tsv",
+    "classifier": "reference/silva_classifier.qza",
+    "outdir": "results"
+}

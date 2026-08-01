@@ -1,0 +1,15 @@
+name: github-ci
+
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+
+  - nextflow
+
+  - fastqc
+
+  - multiqc
+
+  - qiime2-amplicon=2025.10
