@@ -1,0 +1,65 @@
+Aug-05 06:29:38.458 [main] DEBUG nextflow.cli.Launcher - $> nextflow run main.nf
+Aug-05 06:29:38.707 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 24.10.6
+Aug-05 06:29:38.755 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/jayanth/.nextflow/plugins; core-plugins: nf-amazon@2.9.3,nf-azure@1.10.2,nf-cloudcache@0.4.2,nf-codecommit@0.2.2,nf-console@1.1.4,nf-google@1.15.4,nf-tower@1.9.3,nf-wave@1.7.5
+Aug-05 06:29:38.803 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Aug-05 06:29:38.810 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Aug-05 06:29:38.821 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Aug-05 06:29:38.879 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Aug-05 06:29:38.946 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/nextflow.config
+Aug-05 06:29:38.955 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/nextflow.config
+Aug-05 06:29:39.043 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/jayanth/.nextflow/secrets/store.json
+Aug-05 06:29:39.053 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@5af97169] - activable => nextflow.secret.LocalSecretsProvider@5af97169
+Aug-05 06:29:39.070 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Aug-05 06:29:40.534 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 from script declaration
+Aug-05 06:29:40.592 [main] DEBUG nextflow.cli.CmdRun - Launching `main.nf` [chaotic_sammet] DSL2 - revision: c2cb70a0aa
+Aug-05 06:29:40.597 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Aug-05 06:29:40.598 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Aug-05 06:29:40.772 [main] DEBUG nextflow.Session - Session UUID: e1831080-e604-4d0e-aff0-e888f937ed21
+Aug-05 06:29:40.774 [main] DEBUG nextflow.Session - Run name: chaotic_sammet
+Aug-05 06:29:40.776 [main] DEBUG nextflow.Session - Executor pool size: 12
+Aug-05 06:29:40.798 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Aug-05 06:29:40.816 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=36; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Aug-05 06:29:40.921 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 24.10.6 build 5937
+  Created: 23-04-2025 16:53 UTC 
+  System: Linux 5.15.167.4-microsoft-standard-WSL2
+  Runtime: Groovy 4.0.23 on OpenJDK 64-Bit Server VM 11.0.27+6
+  Encoding: UTF-8 (UTF-8)
+  Process: 1875@Jayanthkumarpc [127.0.1.1]
+  CPUs: 12 - Mem: 7.4 GB (5.4 GB) - Swap: 2 GB (2 GB)
+Aug-05 06:29:41.005 [main] DEBUG nextflow.Session - Work-dir: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/work [v9fs]
+Aug-05 06:29:41.008 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/bin
+Aug-05 06:29:41.074 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Aug-05 06:29:41.101 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Aug-05 06:29:41.163 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Aug-05 06:29:41.192 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 13; maxThreads: 1000
+Aug-05 06:29:41.565 [main] DEBUG nextflow.Session - Session start
+Aug-05 06:29:41.998 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Aug-05 06:29:42.859 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Aug-05 06:29:42.865 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Aug-05 06:29:42.882 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Aug-05 06:29:42.906 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=12; memory=7.4 GB; capacity=12; pollInterval=100ms; dumpInterval=5m
+Aug-05 06:29:42.913 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Aug-05 06:29:43.057 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: DOWNLOAD_FASTQ, DOWNLOAD:DOWNLOAD_FASTQ
+Aug-05 06:29:43.059 [main] DEBUG nextflow.Session - Igniting dataflow network (2)
+Aug-05 06:29:43.075 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > DOWNLOAD:DOWNLOAD_FASTQ
+Aug-05 06:29:43.082 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_bae8360ef5a178c9: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/./workflows/../modules/download_fastq.nf
+  Script_55b5448353d9681e: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/main.nf
+  Script_508e803f81af9983: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/./workflows/download.nf
+Aug-05 06:29:43.084 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Aug-05 06:29:43.087 [main] DEBUG nextflow.Session - Session await
+Aug-05 06:29:43.623 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Aug-05 06:29:43.634 [Task submitter] INFO  nextflow.Session - [8d/4eba2b] Submitted process > DOWNLOAD:DOWNLOAD_FASTQ (SRR2914118)
+Aug-05 06:30:37.532 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: DOWNLOAD:DOWNLOAD_FASTQ (SRR2914118); status: COMPLETED; exit: 0; error: -; workDir: /mnt/c/class_project/stunted-child-microbiome/PRJNA279828_Microbiome_Pipeline/work/8d/4eba2bedaaf1b11ab756601004a822]
+Aug-05 06:30:37.535 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=36; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Aug-05 06:30:37.668 [TaskFinalizer-1] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'PublishDir' minSize=10; maxSize=36; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Aug-05 06:30:37.689 [main] DEBUG nextflow.Session - Session await > all processes finished
+Aug-05 06:30:37.728 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Aug-05 06:30:37.729 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Aug-05 06:30:37.739 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Aug-05 06:30:38.424 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'PublishDir' shutdown completed (hard=false)
+Aug-05 06:30:38.439 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=1; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=7m 10s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=8; peakMemory=0; ]
+Aug-05 06:30:38.593 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Aug-05 06:30:38.655 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Aug-05 06:30:38.657 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

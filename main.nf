@@ -1,13 +1,9 @@
 nextflow.enable.dsl = 2
 
-println ""
-println "========================================"
-println "PRJNA279828 Microbiome Pipeline"
-println "========================================"
-println ""
+include { DOWNLOAD_WORKFLOW } from './workflows/download'
 
 workflow {
 
-    println "Pipeline started"
+    DOWNLOAD_WORKFLOW()
 
 }
