@@ -1,9 +1,16 @@
 nextflow.enable.dsl = 2
 
-include { DOWNLOAD_WORKFLOW } from './workflows/download'
+include { QC } from './workflows/qc'
 
 workflow {
 
-    DOWNLOAD_WORKFLOW()
+    Channel
+        .fromFilePairs(
+            params.reads,
+            checkIfExists: true
+        )
+        .set { read_pairs }
+
+    QC(read_pairs)
 
 }
