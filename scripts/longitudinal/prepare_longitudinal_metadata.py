@@ -5,11 +5,17 @@ import pandas as pd
 input_file = sys.argv[1]
 output_file = sys.argv[2]
 
+
 # ---------------------------------------------------------
 # Read metadata
 # ---------------------------------------------------------
 
 df = pd.read_csv(input_file, sep="\t")
+
+
+# ---------------------------------------------------------
+# Validate required columns
+# ---------------------------------------------------------
 
 required_columns = [
     "sample-id",
@@ -18,17 +24,30 @@ required_columns = [
     "timepoint"
 ]
 
-missing = [col for col in required_columns if col not in df.columns]
+missing_columns = [
+    col for col in required_columns
+    if col not in df.columns
+]
 
-if missing:
+if missing_columns:
     raise ValueError(
-        f"Missing required metadata columns: {', '.join(missing)}"
+        f"Missing required longitudinal columns: {missing_columns}"
     )
 
 
 # ---------------------------------------------------------
 # Convert data types
 # ---------------------------------------------------------
+
+df["age_days"] = pd.to_numeric(
+    df["age_days"],
+    errors="coerce"
+)
+
+df["age_months"] = pd.to_numeric(
+    df["age_months"],
+    errors="coerce"
+)
 
 df["collection_date"] = pd.to_datetime(
     df["collection_date"],
@@ -40,93 +59,62 @@ df["timepoint"] = pd.to_numeric(
     errors="coerce"
 )
 
-if "age_days" in df.columns:
-    df["age_days"] = pd.to_numeric(
-        df["age_days"],
-        errors="coerce"
-    )
 
-if "age_months" in df.columns:
-    df["age_months"] = pd.to_numeric(
-        df["age_months"],
-        errors="coerce"
-    )
+# ---------------------------------------------------------
+# Identify repeated subjects
+# ---------------------------------------------------------
 
-if "weight" in df.columns:
-    df["weight"] = pd.to_numeric(
-        df["weight"],
-        errors="coerce"
-    )
-
-if "height_cm" in df.columns:
-    df["height_cm"] = pd.to_numeric(
-        df["height_cm"],
-        errors="coerce"
-    )
+df["is_repeated_subject"] = (
+    df["subject"].duplicated(keep=False)
+)
 
 
 # ---------------------------------------------------------
-# Sort longitudinal observations
+# Number of observations per subject
+# ---------------------------------------------------------
+
+subject_counts = (
+    df.groupby("subject")["sample-id"]
+      .transform("count")
+)
+
+df["n_timepoints"] = subject_counts
+
+
+# ---------------------------------------------------------
+# Identify longitudinal subjects
+# ---------------------------------------------------------
+
+df["is_longitudinal"] = (
+    df["n_timepoints"] > 1
+)
+
+
+# ---------------------------------------------------------
+# Sort observations
 # ---------------------------------------------------------
 
 df = df.sort_values(
-    ["subject", "timepoint"]
-).reset_index(drop=True)
-
-
-# ---------------------------------------------------------
-# Add longitudinal helper columns
-# ---------------------------------------------------------
-
-df["is_repeated_subject"] = df["subject"].duplicated(
-    keep=False
-)
-
-df["n_timepoints"] = df.groupby(
-    "subject"
-)["timepoint"].transform("count")
-
-df["previous_timepoint"] = df.groupby(
-    "subject"
-)["timepoint"].shift(1)
-
-df["timepoint_change"] = (
-    df["timepoint"] -
-    df["previous_timepoint"]
+    ["subject", "timepoint", "collection_date"]
 )
 
 
 # ---------------------------------------------------------
-# Create analysis-friendly aliases
+# Calculate time since first observation
 # ---------------------------------------------------------
 
-df["individual_id"] = df["subject"]
-
-df["state"] = df["timepoint"]
-
-df["time"] = df["age_months"] if "age_months" in df.columns else df["timepoint"]
-
-
-# ---------------------------------------------------------
-# Validation
-# ---------------------------------------------------------
-
-print("Longitudinal metadata prepared.")
-print(f"Samples: {len(df)}")
-print(f"Subjects: {df['subject'].nunique()}")
-print(
-    f"Repeated subjects: "
-    f"{df.loc[df['is_repeated_subject'], 'subject'].nunique()}"
+first_date = (
+    df.groupby("subject")["collection_date"]
+      .transform("min")
 )
 
-print(
-    f"Timepoints: "
-    f"{df['timepoint'].nunique()}"
-)
+df["days_since_baseline"] = (
+    df["collection_date"] - first_date
+).dt.days
 
 
 # ---------------------------------------------------------
-# Write output
+# Save prepared metadata
 # ---------------------------------------------------------
 
 df.to_csv(
@@ -134,3 +122,17 @@ df.to_csv(
     sep="\t",
     index=False
 )
+
+
+# ---------------------------------------------------------
+# Summary
+# ---------------------------------------------------------
+
+print("Longitudinal metadata prepared successfully.")
+print(f"Samples: {len(df)}")
+print(f"Subjects: {df['subject'].nunique()}")
+print(
+    f"Longitudinal subjects: "
+    f"{df.loc[df['is_longitudinal'], 'subject'].nunique()}"
+)
+

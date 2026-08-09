@@ -1,0 +1,20 @@
+# Use LF line endings for source files
+*.nf        text eol=lf
+*.config    text eol=lf
+*.py        text eol=lf
+*.R         text eol=lf
+*.sh        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.tsv       text eol=lf
+*.csv       text eol=lf
+
+# Never modify binary sequencing/reference files
+*.fastq     -text
+*.fastq.gz  -text
+*.qza       -text
+*.qzv       -text
+*.zip       -text
+*.gz        -text
