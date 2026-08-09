@@ -30,6 +30,16 @@ jobs:
           sudo mv nextflow /usr/local/bin/
           nextflow -version
 
-      - name: Validate Nextflow script
+      - name: Create CI test input data
+        run: |
+          mkdir -p data/raw_fastq
+
+          printf '@CI_TEST\nACGTACGTACGT\n+\nFFFFFFFFFFFF\n' \
+            | gzip > data/raw_fastq/SRR2914118_1.fastq.gz
+
+          printf '@CI_TEST\nTGCATGCATGCA\n+\nFFFFFFFFFFFF\n' \
+            | gzip > data/raw_fastq/SRR2914118_2.fastq.gz
+
+      - name: Validate Nextflow pipeline
         run: |
           nextflow run main.nf -stub-run
