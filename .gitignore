@@ -74,4 +74,19 @@ results/
 
 *.RData
 
-.DS_Store
+
+# Raw sequencing data
+data/raw_fastq/*.fastq
+data/raw_fastq/*.fastq.gz
+
+# Large QIIME2 classifier
+resources/classifiers/*.qza
+
+# Nextflow
+work/
+.nextflow/
+.nextflow.log*
+*.nextflow.log
+
+# Generated results
+results/
