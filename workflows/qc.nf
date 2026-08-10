@@ -13,5 +13,4 @@ workflow QC {
     MULTIQC(
         FASTQC.out.zip.collect()
     )
-
 }

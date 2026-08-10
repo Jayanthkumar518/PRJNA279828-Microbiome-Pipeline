@@ -1,138 +1,72 @@
-/*
- * =========================================================
- * LONGITUDINAL MICROBIOME WORKFLOW
- * =========================================================
- *
- * Purpose:
- *   Prepare metadata for repeated-measures / longitudinal
- *   microbiome analysis.
- *
- * Current longitudinal metadata:
- *
- *   sample-id
- *   subject
- *   age_days
- *   birth_weight
- *   sex
- *   weight
- *   height_cm
- *   country
- *   collection_date
- *   group
- *   age_months
- *   timepoint
- *
- * =========================================================
- */
+include { PREPARE_LONGITUDINAL_METADATA } from '../modules/longitudinal/prepare_longitudinal_metadata'
+include { ALPHA_LME } from '../modules/longitudinal/alpha_lme'
+include { FIRST_DISTANCES } from '../modules/longitudinal/first_distances'
+include { BETA_LME } from '../modules/longitudinal/beta_lme'
 
-
-/*
- * =========================================================
- * PROCESS
- * =========================================================
- */
-
-process PREPARE_LONGITUDINAL_METADATA {
-
-    tag "longitudinal_metadata"
-
-
-    /*
-     * -----------------------------------------------------
-     * Conda environment
-     * -----------------------------------------------------
-     */
-
-    conda "${projectDir}/envs/longitudinal.yml"
-
-
-    /*
-     * -----------------------------------------------------
-     * Publish result
-     * -----------------------------------------------------
-     */
-
-    publishDir "${params.outdir}/08_longitudinal",
-        mode: 'copy'
-
-
-    /*
-     * -----------------------------------------------------
-     * Input
-     * -----------------------------------------------------
-     */
-
-    input:
-
-    path metadata
-
-
-    /*
-     * -----------------------------------------------------
-     * Output
-     * -----------------------------------------------------
-     */
-
-    output:
-
-    path "longitudinal_metadata.tsv",
-        emit: metadata
-
-
-    /*
-     * -----------------------------------------------------
-     * Script
-     * -----------------------------------------------------
-     */
-
-    script:
-
-    """
-    python ${projectDir}/scripts/longitudinal/prepare_longitudinal_metadata.py \
-        ${metadata} \
-        longitudinal_metadata.tsv
-    """
-}
-
-
-/*
- * =========================================================
- * LONGITUDINAL WORKFLOW
- * =========================================================
- */
 
 workflow LONGITUDINAL {
-
-
-    /*
-     * -----------------------------------------------------
-     * INPUT
-     * -----------------------------------------------------
-     */
 
     take:
 
     metadata
+    shannon
+    beta_core_metrics
 
+
+    main:
 
     /*
      * -----------------------------------------------------
-     * MAIN
+     * 1. PREPARE LONGITUDINAL METADATA
      * -----------------------------------------------------
      */
-
-    main:
 
     prepared_metadata = PREPARE_LONGITUDINAL_METADATA(metadata)
 
 
     /*
      * -----------------------------------------------------
-     * OUTPUT
+     * 2. ALPHA DIVERSITY LME
      * -----------------------------------------------------
      */
+
+    alpha_lme = ALPHA_LME(
+        shannon,
+        prepared_metadata.metadata
+    )
+
+
+    /*
+     * -----------------------------------------------------
+     * 3. FIRST DISTANCES
+     * -----------------------------------------------------
+     */
+
+    first_distances = FIRST_DISTANCES(
+        beta_core_metrics,
+        prepared_metadata.metadata
+    )
+
+
+    /*
+     * -----------------------------------------------------
+     * 4. BETA DIVERSITY LME
+     * -----------------------------------------------------
+     */
+
+    beta_lme = BETA_LME(
+        first_distances.distances,
+        prepared_metadata.metadata
+    )
+
 
     emit:
 
     prepared = prepared_metadata.metadata
+
+    alpha_lme = alpha_lme.visualization
+
+    first_distances = first_distances.distances
+
+    beta_lme = beta_lme.visualization
 }

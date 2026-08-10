@@ -21,7 +21,7 @@ required_columns = [
     "sample-id",
     "subject",
     "collection_date",
-    "timepoint"
+    "timepoint",
 ]
 
 missing_columns = [
@@ -36,28 +36,53 @@ if missing_columns:
 
 
 # ---------------------------------------------------------
-# Convert data types
+# Convert numeric columns
 # ---------------------------------------------------------
 
-df["age_days"] = pd.to_numeric(
-    df["age_days"],
+if "age_days" in df.columns:
+    df["age_days"] = pd.to_numeric(
+        df["age_days"],
+        errors="coerce"
+    )
+
+if "age_months" in df.columns:
+    df["age_months"] = pd.to_numeric(
+        df["age_months"],
+        errors="coerce"
+    )
+
+df["timepoint"] = pd.to_numeric(
+    df["timepoint"],
     errors="coerce"
 )
 
-df["age_months"] = pd.to_numeric(
-    df["age_months"],
-    errors="coerce"
-)
+
+# ---------------------------------------------------------
+# Convert collection date
+# ---------------------------------------------------------
 
 df["collection_date"] = pd.to_datetime(
     df["collection_date"],
     errors="coerce"
 )
 
-df["timepoint"] = pd.to_numeric(
-    df["timepoint"],
-    errors="coerce"
-)
+
+# ---------------------------------------------------------
+# Validate critical values
+# ---------------------------------------------------------
+
+if df["subject"].isna().any():
+    raise ValueError("Missing subject IDs detected.")
+
+if df["timepoint"].isna().any():
+    raise ValueError(
+        "Missing or invalid timepoint values detected."
+    )
+
+if df["collection_date"].isna().any():
+    raise ValueError(
+        "Missing or invalid collection dates detected."
+    )
 
 
 # ---------------------------------------------------------
@@ -73,12 +98,10 @@ df["is_repeated_subject"] = (
 # Number of observations per subject
 # ---------------------------------------------------------
 
-subject_counts = (
+df["n_timepoints"] = (
     df.groupby("subject")["sample-id"]
       .transform("count")
 )
-
-df["n_timepoints"] = subject_counts
 
 
 # ---------------------------------------------------------
@@ -100,7 +123,7 @@ df = df.sort_values(
 
 
 # ---------------------------------------------------------
-# Calculate time since first observation
+# Calculate days since baseline
 # ---------------------------------------------------------
 
 first_date = (
@@ -131,8 +154,8 @@ df.to_csv(
 print("Longitudinal metadata prepared successfully.")
 print(f"Samples: {len(df)}")
 print(f"Subjects: {df['subject'].nunique()}")
+
 print(
     f"Longitudinal subjects: "
     f"{df.loc[df['is_longitudinal'], 'subject'].nunique()}"
 )
-

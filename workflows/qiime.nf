@@ -12,12 +12,6 @@ include { BETA_DIVERSITY } from '../modules/qiime/beta_diversity'
 
 workflow QIIME {
 
-    /*
-     * ---------------------------------------------------------
-     * INPUT
-     * ---------------------------------------------------------
-     */
-
     take:
     reads
 
@@ -26,16 +20,28 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 1. CREATE QIIME2 MANIFEST
+     * 1. COLLECT DOWNLOADED READS
      * ---------------------------------------------------------
      */
 
-    manifest = CREATE_MANIFEST()
+    read_files = reads
+        .map { run, r1, r2 -> [r1, r2] }
+        .flatten()
+        .collect()
 
 
     /*
      * ---------------------------------------------------------
-     * 2. IMPORT PAIRED-END READS
+     * 2. CREATE QIIME2 MANIFEST
+     * ---------------------------------------------------------
+     */
+
+    manifest = CREATE_MANIFEST(read_files)
+
+
+    /*
+     * ---------------------------------------------------------
+     * 3. IMPORT PAIRED-END READS
      * ---------------------------------------------------------
      */
 
@@ -44,7 +50,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 3. DEMULTIPLEXING SUMMARY
+     * 4. DEMUX SUMMARY
      * ---------------------------------------------------------
      */
 
@@ -53,12 +59,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 4. DADA2 DENOISING
-     *
-     * Outputs:
-     *   - Feature table
-     *   - Representative sequences
-     *   - Denoising statistics
+     * 5. DADA2 DENOISING
      * ---------------------------------------------------------
      */
 
@@ -71,9 +72,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 5. PHYLOGENY
-     *
-     * Uses representative ASV sequences.
+     * 6. PHYLOGENY
      * ---------------------------------------------------------
      */
 
@@ -84,9 +83,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 6. TAXONOMIC CLASSIFICATION
-     *
-     * Uses the SILVA classifier.
+     * 7. TAXONOMIC CLASSIFICATION
      * ---------------------------------------------------------
      */
 
@@ -97,7 +94,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 7. FEATURE TABLE SUMMARY
+     * 8. FEATURE TABLE SUMMARY
      * ---------------------------------------------------------
      */
 
@@ -106,12 +103,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 8. TAXONOMIC BARPLOT
-     *
-     * Inputs:
-     *   - Feature table
-     *   - Taxonomy
-     *   - Sample metadata
+     * 9. SAMPLE METADATA
      * ---------------------------------------------------------
      */
 
@@ -122,6 +114,12 @@ workflow QIIME {
         )
 
 
+    /*
+     * ---------------------------------------------------------
+     * 10. TAXONOMIC BARPLOT
+     * ---------------------------------------------------------
+     */
+
     barplot = TAXA_BARPLOT(
         dada_table,
         taxonomy_result,
@@ -131,12 +129,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 9. ALPHA DIVERSITY
-     *
-     * Outputs:
-     *   - Observed features
-     *   - Shannon diversity
-     *   - Faith's phylogenetic diversity
+     * 11. ALPHA DIVERSITY
      * ---------------------------------------------------------
      */
 
@@ -148,17 +141,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * 10. BETA DIVERSITY
-     *
-     * Produces:
-     *
-     *   core-metrics-results/
-     *
-     * containing QIIME2 beta-diversity distance matrices,
-     * PCoA results and related outputs.
-     *
-     * IMPORTANT:
-     * Requires at least two samples in the feature table.
+     * 12. BETA DIVERSITY
      * ---------------------------------------------------------
      */
 
@@ -171,7 +154,7 @@ workflow QIIME {
 
     /*
      * ---------------------------------------------------------
-     * WORKFLOW OUTPUTS
+     * OUTPUTS
      * ---------------------------------------------------------
      */
 

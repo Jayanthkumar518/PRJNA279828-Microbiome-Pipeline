@@ -1,8 +1,8 @@
 process IMPORT_READS {
 
-    publishDir "${params.outdir}/04_import", mode: 'copy'
+    tag "QIIME2 paired-end import"
 
-    cpus 4
+    publishDir "${params.outdir}/04_import", mode: 'copy'
 
     input:
     path manifest
@@ -14,7 +14,7 @@ process IMPORT_READS {
     """
     qiime tools import \
         --type 'SampleData[PairedEndSequencesWithQuality]' \
-        --input-path ${manifest} \
+        --input-path manifest.tsv \
         --output-path paired-end-demux.qza \
         --input-format PairedEndFastqManifestPhred33V2
     """

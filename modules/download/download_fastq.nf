@@ -1,34 +1,26 @@
-/*
-------------------------------------------------------------
-Download FASTQ files from NCBI SRA
-------------------------------------------------------------
-Input:
-    SRR accession (e.g. SRR2914118)
-
-Output:
-    Paired-end FASTQ files (*.fastq.gz)
-------------------------------------------------------------
-*/
-
 process DOWNLOAD_FASTQ {
 
     tag "${run}"
 
-    publishDir "${params.outdir}/01_download",
-        mode: 'copy'
+    cpus params.download_threads
 
-    cpus 8
+    publishDir "${projectDir}/data/raw_fastq",
+        mode: 'copy',
+        overwrite: false
 
     input:
     val run
 
     output:
-    path("*.fastq.gz"), emit: reads
+    tuple val(run), path("${run}_1.fastq.gz"), path("${run}_2.fastq.gz"),
+        emit: reads
 
     script:
+
     """
     bash ${projectDir}/scripts/download/download_fastq.sh \
-        ${run} \
-        .
+        "${run}" \
+        "${task.cpus}" \
+        "."
     """
 }

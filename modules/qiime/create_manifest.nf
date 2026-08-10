@@ -1,6 +1,12 @@
 process CREATE_MANIFEST {
 
-    publishDir "${params.outdir}/04_import", mode: 'copy'
+    tag "Create QIIME2 manifest"
+
+    publishDir "${params.outdir}/03_manifest",
+        mode: 'copy'
+
+    input:
+    path read_files
 
     output:
     path "manifest.tsv", emit: manifest
@@ -8,7 +14,7 @@ process CREATE_MANIFEST {
     script:
     """
     python ${projectDir}/scripts/metadata/create_manifest.py \
-        ${projectDir}/${params.raw_dir} \
+        . \
         manifest.tsv
     """
 }
